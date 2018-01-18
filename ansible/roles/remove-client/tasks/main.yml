@@ -1,0 +1,15 @@
+---
+- name: Terminate Client
+  local_action:
+    module: ec2
+    state: 'absent'
+    region: '{{ ec2_region }}'
+    instance_ids: '{{ ec2_instanceid }}'
+
+- name: Remove instance to local host group
+  local_action: 
+    module: lineinfile 
+    dest: inventory.yml 
+    regexp: "ec2_instanceid={{ ec2_instanceid }} " 
+    state: absent 
+

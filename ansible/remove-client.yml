@@ -1,0 +1,9 @@
+---
+ - hosts: launched
+   connection: local
+   gather_facts: false
+   user: root
+   pre_tasks:
+    - include_vars: vars/{{type}}.yml
+   roles:
+    - remove-client

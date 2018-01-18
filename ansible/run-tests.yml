@@ -1,0 +1,8 @@
+---
+ - hosts: launched
+   gather_facts: false
+   remote_user: centos
+   pre_tasks:
+    - include_vars: vars/{{type}}.yml
+   roles:
+    - run-tests

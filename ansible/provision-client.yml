@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  gather_facts: false
+  pre_tasks:
+    - include_vars: vars/{{type}}.yml
+  roles:
+    - provision-client
+    
+- name: Update the created instances
+  hosts: launched
+  remote_user: centos
+  become_method: sudo
+  become: true
+  pre_tasks:
+    - include_vars: vars/{{type}}.yml
+  roles: 
+    - update-client
+    
+- name: Restart the created instances
+  hosts: launched
+  connection: local
+  gather_facts: false
+  user: root
+  pre_tasks:
+   - include_vars: vars/{{type}}.yml
+  roles:
+   - restart-client
+   
+- hosts: launched
+  gather_facts: false
+  remote_user: centos
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - include_vars: vars/{{type}}.yml
+  roles:
+    - deploy-sdkperf
+

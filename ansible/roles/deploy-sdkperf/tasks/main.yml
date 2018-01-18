@@ -1,0 +1,65 @@
+---
+#- stat: path=/home/centos
+#  register: dir
+
+#- debug:
+#    msg: "{{ dir }}"
+    
+- name: Create directory for keys
+  file: 
+   path: /home/centos/keys
+   state: directory
+   owner: centos
+   group: centos
+
+- name: Create needed directories
+  file: 
+   path: /home/centos/scripts/tools
+   state: directory
+   owner: centos
+   group: centos
+#  when: dir.stat.exists == False
+    
+- name: Copy test env settings to Client on EC2
+  copy: 
+   src: ../scripts/setenv.sh 
+   dest: /home/centos/scripts/setenv.sh
+   owner: centos
+   group: centos
+
+- name: Copy test scripts to Client on EC2
+  copy: 
+   src: "{{ item }}" 
+   dest: /home/centos/scripts/
+   owner: centos
+   group: centos
+   mode: 0700
+  with_fileglob:
+   - ../scripts/run_*.sh
+
+- name: Copy SDKPerf to Client on EC2
+  copy: 
+   src: ../scripts/tools/sol-sdkperf-mqtt 
+   dest: /home/centos/scripts/tools
+   owner: centos
+   group: centos
+   follow: yes
+
+- name: Make sure SDKPerf is executable
+  file: 
+   path: /home/centos/scripts/tools/sol-sdkperf-mqtt/sdkperf_mqtt.sh 
+   mode: 0700
+   owner: centos
+   group: centos
+   state: touch
+
+- name: Copy keystores to Client on EC2
+  copy: 
+   src: "../keys/{{ item }}"  
+   dest: "/home/centos/keys/{{ item }}"
+   owner: centos
+   group: centos
+  with_items:
+   - truststore.jks
+   - clientstore.jks
+

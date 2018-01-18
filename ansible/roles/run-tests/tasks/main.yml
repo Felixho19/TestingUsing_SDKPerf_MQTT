@@ -1,0 +1,27 @@
+---
+- name: Execute the test suite
+  command: '/home/centos/scripts/run_tests.sh {{ test_keystore_password }} {{ solacecloud_mqtt_url }} {{ solacecloud_mqtt_uid }} {{ solacecloud_mqtt_password }} {{ awsiot_mqtt_url }}'
+  async: 100000
+  poll: 0
+  args: 
+    chdir: '/home/centos/scripts'
+  register: test_script
+    
+- name: Check on test
+  async_status: jid={{ test_script.ansible_job_id }}
+  register: job_result
+  until: job_result.finished
+  retries: 300
+
+- name: Zip up the results
+  command: 'tar -cvzf test_report.tar.gz /home/centos/scripts/*.txt'
+  args: 
+    chdir: '/home/centos/scripts'
+    
+- synchronize:  
+    src: "/home/centos/scripts/test_report.tar.gz"
+    dest: "test_report_{{ ec2_region }}_{{ ec2_instance_type }}.tar.gz"
+    mode: pull
+  
+  
+

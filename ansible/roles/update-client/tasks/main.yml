@@ -1,0 +1,12 @@
+---
+- name: Update the OS to latest
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install jre
+  yum:
+    name: 'java-1.8.0-openjdk-headless'
+    state: latest
+
+

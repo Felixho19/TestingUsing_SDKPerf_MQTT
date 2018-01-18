@@ -1,0 +1,13 @@
+# Defines which sort of AWS instance to use for testing
+# and which AWS region to create it in.
+ec2_keypair: "NameOfYour_KeyPair"
+ec2_security_group: "sg-66aaa81d"
+ec2_instance_type: "t2.micro"
+#ec2_instance_type: "m4.large"
+ec2_image: "ami-192a9460"  #CentOS-7 from 2017-12-05
+#ec2_subnet_ids: ['subnet-1c48e16a']
+ec2_region: "eu-west-1"
+ec2_tag_Name: "TestClient"
+ec2_tag_Type: "Client"
+ec2_tag_Environment: "ci/cd"
+ec2_volume_size: 30
